@@ -29,8 +29,14 @@ function Menu() {
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton component={Link} href="/usuario/login">
+          <ListItemButton component={Link} href="/usuarios/login">
             <ListItemText primary="Login" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton component={Link} href="/eventos/alterar/id">
+            <ListItemText primary="Alterar Evento" />
           </ListItemButton>
         </ListItem>
       </List>
