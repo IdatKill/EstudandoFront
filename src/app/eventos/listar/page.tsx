@@ -3,31 +3,50 @@
 import page from "@/app/page";
 import api from "@/services/api";
 import Evento from "@/types/evento";
-import { Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
+import { Container, Link, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from "@mui/material";
 import { use, useEffect, useState } from "react";
 
 function ListarEventos() {
   const [evento, setEventos] = useState<Evento[]>([]);
+  const [filtro, setFiltro] = useState<Evento[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   useEffect(() => {
     api
       .get<Evento[]>("/evento/listar")
       .then((resposta) => {
-        setEventos(resposta.data);
         console.table(resposta.data);
+        setEventos(resposta.data);
+        setFiltro(resposta.data);
       })
       .catch((erro) => {
-        console.log("erro");
+        console.log(erro);
       });
   }, []);
 
+  function filtrar(texto: string) {
+    const resultado = evento.filter((evento) => {
+      return evento.nome
+      .toLowerCase()
+      .includes(texto.toLowerCase());
+    });
+    setFiltro(resultado);
+  }
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>
         Listar Eventos
       </Typography>
+
+      <TextField
+      fullWidth
+      margin="normal"
+      label="Pesquisar Evento"
+      type="text"
+      required
+      onChange={(e) => filtrar(e.target.value)} />
+
       <TableContainer component={Paper} elevation={10}>
         <Table>
           <TableHead>
@@ -40,8 +59,7 @@ function ListarEventos() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {evento
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            {filtro
               .map((evento) => (
                 <TableRow key={evento.id}>
                   <TableCell>{evento.id}</TableCell>
@@ -49,6 +67,9 @@ function ListarEventos() {
                   <TableCell>{evento.criadoEm}</TableCell>
                   <TableCell>{evento.data}</TableCell>
                   <TableCell>{evento.local}</TableCell>
+                  <TableCell>
+                    <Link href={`/evento/alterar/${evento.id}`}>Alterar</Link>
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>

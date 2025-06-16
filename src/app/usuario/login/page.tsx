@@ -34,7 +34,7 @@ function Login() {
 
         const token = await resposta.text();
         localStorage.setItem('token', token);
-        router.push("/eventos/listar");
+        router.push("/home");
 
     }
 
